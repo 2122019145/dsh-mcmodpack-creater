@@ -1,0 +1,36 @@
+{
+  "name": "dsh-hmcl-mcp",
+  "version": "0.2.0",
+  "type": "module",
+  "main": "./host.js",
+  "exports": {
+    ".": "./host.js",
+    "./tools": "./lib/tools.js",
+    "./cordis.patch.yml": "./cordis.patch.yml"
+  },
+  "files": [
+    "host.js",
+    "lib/",
+    "cordis.patch.yml",
+    "README.md"
+  ],
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "*",
+    "@deepseek-ai/dsh-tools": "^0.2.0",
+    "@deepseek-ai/schemastery": "*"
+  },
+  "engines": {
+    "node": ">=18",
+    "python": ">=3"
+  },
+  "dsh": {
+    "plugin": true,
+    "kind": "server",
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "description": "DSH plugin bridging HMCL-MCP for Minecraft modpack management with FTB Quests integration",
+  "author": "DeepSeek Harness Plugin",
+  "license": "MIT"
+}

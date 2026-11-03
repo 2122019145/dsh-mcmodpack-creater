@@ -1,0 +1,26 @@
+{
+  "chapter_title": "从水车到 ME 网络",
+  "group_title": "主线",
+  "icon": "create:water_wheel",
+  "chapter_file": "tech_main",
+  "locales": ["zh_cn", "en_us"],
+  "quests": [
+    {
+      "key": "q1",
+      "title": "第一块铁",
+      "subtitle": "先把镐子磨亮",
+      "desc": ["挖到第一块铁。", "铁镐都没有，你连盆都敲不响。"],
+      "item": null,
+      "deps": [],
+      "rewards": [{"type": "xp", "amount": 30}]
+    },
+    {
+      "key": "q2",
+      "title": "安山合金",
+      "item": "create:andesite_alloy",
+      "count": 4,
+      "deps": ["q1"],
+      "rewards": [{"type": "xp", "amount": 40}]
+    }
+  ]
+}
