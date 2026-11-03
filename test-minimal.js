@@ -4,15 +4,21 @@
  * Minimal test script for the HMCL-MCP client without DSH tool registration.
  */
 
+import path from 'node:path';
 import { HmclMcpClient } from './lib/mcp-client.js';
+import { PLUGIN_ROOT } from './lib/paths.js';
+
+// Portable defaults: the jar lives next to package.json unless overridden.
+const jarPath = process.env.HMCL_MCP_JAR || path.join(PLUGIN_ROOT, 'hmcl-mcp.jar');
+const workdir = process.env.HMCL_MCP_WORKDIR || '~/.hmcl-mcp';
 
 async function testMinimal() {
   console.log('Testing HMCL-MCP client (minimal)...');
 
   const config = {
-    jarPath: 'D:/dsh1/mcpackage_genacter/HMCL-MCP/build/hmcl-mcp.jar',
-    workdir: 'C:/Users/m2122/.hmcl-mcp',
-    javaPath: 'java',
+    jarPath,
+    workdir,
+    javaPath: process.env.HMCL_MCP_JAVA || 'java',
     agentPort: 28501,
     agentToken: 'hmcl-mcp'
   };

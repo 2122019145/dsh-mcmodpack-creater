@@ -4,7 +4,13 @@
  * Test script to check if the plugin can be loaded and tools registered.
  */
 
+import path from 'node:path';
 import { apply, cleanupClient } from './lib/tools.js';
+import { PLUGIN_ROOT } from './lib/paths.js';
+
+// Portable defaults: the jar lives next to package.json unless overridden.
+const jarPath = process.env.HMCL_MCP_JAR || path.join(PLUGIN_ROOT, 'hmcl-mcp.jar');
+const workdir = process.env.HMCL_MCP_WORKDIR || '~/.hmcl-mcp';
 
 console.log('Testing DSH HMCL-MCP plugin load...');
 
@@ -21,9 +27,9 @@ const mockCtx = {
 try {
   // Test plugin application
   apply(mockCtx, {
-    jarPath: 'D:/dsh1/mcpackage_genacter/HMCL-MCP/build/hmcl-mcp.jar',
-    workdir: 'C:/Users/m2122/.hmcl-mcp',
-    javaPath: 'java',
+    jarPath,
+    workdir,
+    javaPath: process.env.HMCL_MCP_JAVA || 'java',
     agentPort: 28501,
     agentToken: 'hmcl-mcp'
   });

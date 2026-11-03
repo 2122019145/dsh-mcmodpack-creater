@@ -1,0 +1,8 @@
+# 统一换行符，保证在 Windows / macOS / Linux 上检出结果一致
+* text=auto
+*.js   text eol=lf
+*.json text eol=lf
+*.md   text eol=lf
+*.yml  text eol=lf
+*.py   text eol=lf
+*.ps1  text eol=crlf

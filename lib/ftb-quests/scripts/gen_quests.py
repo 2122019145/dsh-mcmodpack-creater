@@ -3,10 +3,10 @@
 """gen_quests.py —— 把一份 JSON 任务表编译成 FTB Quests 的 .snbt + lang。
 
 用法：
-    python gen_quests.py --spec quests.json --workdir D:/mc-work --check-only
-    python gen_quests.py --spec quests.json --workdir D:/mc-work
-    python gen_quests.py --spec quests.json --workdir D:/mc-work --instance 实例名
-    python gen_quests.py --spec quests.json --workdir D:/mc-work --mods-dir D:/mc-work/versions/<实例>/mods
+    python gen_quests.py --spec quests.json --workdir ~/.mc-work --check-only
+    python gen_quests.py --spec quests.json --workdir ~/.mc-work
+    python gen_quests.py --spec quests.json --workdir ~/.mc-work --instance 实例名
+    python gen_quests.py --spec quests.json --workdir ~/.mc-work --mods-dir ~/.mc-work/versions/<实例>/mods
 
     --mode flat   2101.1.x：文案写 lang/<locale>.snbt 单文件（默认）
     --mode json5  2101.2+ ：文案写 lang/<locale>/chapters/<name>.snbt
@@ -310,13 +310,16 @@ def resolve_root(workdir: str, instance: str | None) -> str:
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--spec", required=True)
-    ap.add_argument("--workdir", default="D:/mc-work")
+    ap.add_argument("--workdir", default=os.path.expanduser("~/.hmcl-mcp"))
     ap.add_argument("--instance", default=None)
     ap.add_argument("--mods-dir", default=None, help="给了就顺手校验物品 id 是否存在")
     ap.add_argument("--mode", default="auto", choices=["auto", "flat", "json5"])
     ap.add_argument("--locales", default="zh_cn,en_us")
     ap.add_argument("--check-only", action="store_true")
     a = ap.parse_args()
+    a.workdir = os.path.expanduser(os.path.expandvars(a.workdir))
+    if a.mods_dir:
+        a.mods_dir = os.path.expanduser(os.path.expandvars(a.mods_dir))
 
     spec = json.load(open(a.spec, encoding="utf-8"))
     root = resolve_root(a.workdir, a.instance)

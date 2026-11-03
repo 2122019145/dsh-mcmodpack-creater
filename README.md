@@ -14,25 +14,30 @@
 
 ## 安装
 
-### 开发环境（本地）
+### 从源码安装
 
 1. 安装依赖：
 
 ```bash
-cd D:\dsh1\package-agent
+git clone https://github.com/2122019145/dsh-mcmodpack-creater.git
+cd dsh-mcmodpack-creater
 npm install
 ```
 
-2. 在 DSH 桌面端配置文件中注册插件：
+2. 放置 HMCL-MCP JAR：
 
-   在 `~/.dsh/profiles/desktop/package.json` 中添加：
+   将 `hmcl-mcp.jar` 放到本仓库根目录（与 `package.json` 同级），或在 DSH 配置里用 `jarPath` / 环境变量 `HMCL_MCP_JAR` 指向它。JAR 体积较大，未随仓库提交。
+
+3. 在 DSH 桌面端配置文件中注册插件（`~/.dsh/profiles/desktop/package.json`）：
 
    ```json
    "dependencies": {
-     "dsh-hmcl-mcp": "link:D:/dsh1/package-agent",
+     "dsh-hmcl-mcp": "link:../../../dsh-mcmodpack-creater",
      ...
    }
    ```
+
+   `link:` 后面是**相对于 profile 目录**（`~/.dsh/profiles/desktop`）的路径；上面的写法假设仓库克隆在 `~/dsh-mcmodpack-creater`。换成你实际的相对路径即可（写成绝对路径也能用，但换机器后需要修改）。
 
    并在 `dsh.profile.bundles` 中添加：
 
@@ -43,7 +48,9 @@ npm install
    ]
    ```
 
-3. 重启 DSH 桌面端。
+4. 重启 DSH 桌面端。
+
+> 仓库根目录的 `desktop-package.json` 是一份最小示例模板，可按需参考。
 
 ## 使用方法
 
@@ -155,8 +162,8 @@ await hmcl_install_mod({
 ```javascript
 // 构建任务线
 await ftb_build_quests({
-  specPath: "D:/mc-work/quests.json",
-  workdir: "D:/mc-work",
+  specPath: "./quests.json",
+  workdir: "~/.hmcl-mcp",
   instance: "my-tech-pack",
   mode: "auto"
 });
@@ -168,8 +175,8 @@ await ftb_build_quests({
 
 | 配置项 | 说明 | 默认值 |
 | --- | --- | --- |
-| `jarPath` | HMCL-MCP JAR 文件路径 | `D:\dsh1\mcpackage_genacter\HMCL-MCP\build\hmcl-mcp.jar` |
-| `workdir` | HMCL-MCP 工作目录 | `~/.hmcl-mcp` |
+| `jarPath` | HMCL-MCP JAR 文件路径（相对路径以插件目录为基准） | `hmcl-mcp.jar` |
+| `workdir` | HMCL-MCP 工作目录（游戏根目录，支持 `~`） | `~/.hmcl-mcp` |
 | `javaPath` | Java 可执行文件路径 | `java` |
 | `agentPort` | HMCL-MCP 代理 HTTP 端口 | `28501` |
 | `agentToken` | HMCL-MCP 代理令牌 | `hmcl-mcp` |
@@ -178,7 +185,25 @@ await ftb_build_quests({
 ## 环境要求
 
 - Java 17+ 运行时
-- HMCL-MCP JAR 文件（随插件提供）
+- HMCL-MCP JAR 文件（需自行放置到插件目录，或用 `jarPath` / `HMCL_MCP_JAR` 指定）
+- Python 3（仅 FTB Quests 相关工具需要）
+
+## 路径与环境变量
+
+代码中不包含任何机器相关的绝对路径：
+
+- 默认 `jarPath` = `hmcl-mcp.jar`，相对**插件目录**解析（即 `lib/paths.js` 所在包的根目录）
+- 默认 `workdir` = `~/.hmcl-mcp`，`~` 会自动展开
+- FTB Quests 的 Python 脚本按模块自身位置定位，与当前工作目录无关
+
+无需改代码即可用环境变量覆盖：
+
+| 环境变量 | 作用 |
+| --- | --- |
+| `HMCL_MCP_JAR` | HMCL-MCP JAR 路径，优先级高于配置 |
+| `HMCL_MCP_WORKDIR` | 工作目录，优先级高于配置 |
+| `HMCL_MCP_JAVA` | Java 可执行文件路径 |
+| `PYTHON` | Python 可执行文件（默认 `python`） |
 
 ## 架构说明
 

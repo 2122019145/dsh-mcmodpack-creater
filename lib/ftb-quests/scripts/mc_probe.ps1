@@ -3,7 +3,7 @@ mc_probe.ps1 —— 截 Minecraft 窗口 + 发按键（只做验证任务书需�
 
 用法（在 PowerShell 里）：
     .\mc_probe.ps1 -Action info
-    .\mc_probe.ps1 -Action shot -Out D:\shot.png
+    .\mc_probe.ps1 -Action shot -Out .\shot.png
     .\mc_probe.ps1 -Action resize -X 1280 -Y 760
     .\mc_probe.ps1 -Action keymsg -Key j
     .\mc_probe.ps1 -Action clickmsg -X 541 -Y 224   # 多数情况下游戏不响应，仅备用

@@ -13,12 +13,16 @@ import Schema from '@deepseek-ai/schemastery';
 export const Config = Schema.object({
   /**
    * Path to the HMCL-MCP JAR file (the packaged MCP server).
-   * Forward slashes on purpose: a single-backslash string drops the separators
-   * (`\d`, `\m` are not escapes) and yields a path like `D:dsh1mc...jar`.
+   * Relative paths resolve against the plugin directory, so the default
+   * `hmcl-mcp.jar` expects the jar next to `package.json`. The environment
+   * variable `HMCL_MCP_JAR` overrides this value.
    */
-  jarPath: Schema.string().default('D:/dsh1/mcpackage_genacter/HMCL-MCP/build/hmcl-mcp.jar'),
-  /** Working directory for HMCL-MCP (game root: versions/, libraries/, assets/). */
-  workdir: Schema.string().default('D:/mc-work'),
+  jarPath: Schema.string().default('hmcl-mcp.jar'),
+  /**
+   * Working directory for HMCL-MCP (game root: versions/, libraries/, assets/).
+   * `~` is expanded; the environment variable `HMCL_MCP_WORKDIR` overrides it.
+   */
+  workdir: Schema.string().default('~/.hmcl-mcp'),
   /** Java executable path (default: 'java' on PATH). */
   javaPath: Schema.string().default('java'),
   /** HMCL-MCP agent HTTP port. */

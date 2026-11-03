@@ -4,11 +4,14 @@
  * Simple test script for the HMCL-MCP client.
  */
 
+import path from 'node:path';
 import { spawn } from 'node:child_process';
 import { setTimeout } from 'node:timers/promises';
+import { PLUGIN_ROOT, expandPath } from './lib/paths.js';
 
-const jarPath = 'D:/dsh1/mcpackage_genacter/HMCL-MCP/build/hmcl-mcp.jar';
-const workdir = 'C:/Users/m2122/.hmcl-mcp';
+// Portable defaults: the jar lives next to package.json unless overridden.
+const jarPath = process.env.HMCL_MCP_JAR || path.join(PLUGIN_ROOT, 'hmcl-mcp.jar');
+const workdir = expandPath(process.env.HMCL_MCP_WORKDIR, { fallback: '~/.hmcl-mcp' });
 
 async function testMcpClient() {
   console.log('Testing HMCL-MCP client...');

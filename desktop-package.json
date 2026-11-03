@@ -2,48 +2,13 @@
   "name": "dsh-profile-desktop",
   "private": true,
   "dependencies": {
-    "@linxin666/dsh-pet": "0.4.13",
-    "@wxg-prc-cpg/browser-skill-dsh-plugin": "0.4.0",
-    "billion-context": "0.1.209",
-    "dsh-better-sidebar": "0.28.2",
-    "dsh-computer-use-win": "0.5.3",
-    "dsh-connect-workbuddy": "link:D:/test/dsh-connect-workbuddy",
-    "dsh-deepseek-web-login": "1.0.3",
-    "dsh-ego-browser": "0.9.7",
-    "dsh-image-gen": "0.10.0",
-    "dsh-m": "https://registry.npmmirror.com/dsh-m/-/dsh-m-0.11.7.tgz",
-    "dsh-ops": "0.4.4",
-    "dsh-our-free-model": "link:D:/test/dsh-our-free-model-2.7.4/package",
-    "dsh-skill-hub": "0.3.30",
-    "dsh-tool-call-guard": "^0.1.1",
-    "dsh-univer-office": "0.3.9",
-    "dsh-unlag": "1.14.16",
-    "dsh-whale-widget": "0.4.2",
-    "dshmarket": "1.73.6",
-    "minecraft-dev": "0.10.2",
-    "whale_craft": "0.2.0-beta.3",
-    "dsh-hmcl-mcp": "link:D:/dsh1/package-agent"
+    "dsh-hmcl-mcp": "link:../../../dsh-mcmodpack-creater"
   },
   "dsh": {
     "profile": {
       "bundles": [
         "@deepseek-ai/dsh-base",
         "@deepseek-ai/dsh-web-app",
-        "dsh-m",
-        "@linxin666/dsh-pet",
-        "@wxg-prc-cpg/browser-skill-dsh-plugin",
-        "dsh-better-sidebar",
-        "dsh-computer-use-win",
-        "dsh-deepseek-web-login",
-        "dsh-image-gen",
-        "dsh-ops",
-        "dsh-skill-hub",
-        "dsh-univer-office",
-        "dsh-whale-widget",
-        "dshmarket",
-        "dsh-unlag",
-        "dsh-ego-browser",
-        "dsh-our-free-model",
         "dsh-hmcl-mcp"
       ]
     }

@@ -2,32 +2,42 @@
 
 /**
  * Final verification script for the DSH HMCL-MCP plugin.
+ * All paths are relative to this checkout or the current user's home,
+ * so the script runs unchanged on any machine.
  */
 
 import fs from 'fs';
 import path from 'path';
+import { homedir } from 'node:os';
+import { PLUGIN_ROOT } from './lib/paths.js';
+
+const pluginDir = PLUGIN_ROOT;
+const jarPath = process.env.HMCL_MCP_JAR
+  ? path.resolve(process.env.HMCL_MCP_JAR)
+  : path.join(pluginDir, 'hmcl-mcp.jar');
+const profileDir = path.join(homedir(), '.dsh', 'profiles', 'desktop');
 
 console.log('🔍 DSH HMCL-MCP Plugin - Final Verification');
 console.log('='.repeat(45));
 
 // Goal verification
 const goal = {
-  location: 'D:\\dsh1\\package-agent',
+  location: pluginDir,
   requirements: [
     'Implement DSH plugin structure',
-    'Encapsulate HMCL-MCP.jar functionality', 
+    'Encapsulate HMCL-MCP.jar functionality',
     'Enable modpack download/install',
     'Enable autonomous modpack building'
   ]
 };
 
-console.log('\n📋 Goal: "在 D:\\dsh1\\package-agent 中实现并验证一个 DSH 插件，封装 HMCL-MCP.jar，使 Agent 能调用它下载/安装整合包，并能自主搜索、选择 Mod 组建整合包。"');
+console.log(`\n📋 Goal: "在 ${pluginDir} 中实现并验证一个 DSH 插件，封装 HMCL-MCP.jar，使 Agent 能调用它下载/安装整合包，并能自主搜索、选择 Mod 组建整合包。"`);
 
 // 1. Plugin structure verification
 console.log('\n✅ 1. Plugin Structure Implementation:');
 const pluginFiles = [
   'package.json',
-  'host.js', 
+  'host.js',
   'cordis.patch.yml',
   'lib/mcp-client.js',
   'lib/tools.js',
@@ -35,21 +45,21 @@ const pluginFiles = [
 ];
 
 pluginFiles.forEach(file => {
-  const exists = fs.existsSync(path.join('D:/dsh1/package-agent', file));
+  const exists = fs.existsSync(path.join(pluginDir, file));
   console.log(`   ${exists ? '✓' : '✗'} ${file}`);
   if (!exists) process.exit(1);
 });
 
 // 2. HMCL-MCP encapsulation verification
 console.log('\n✅ 2. HMCL-MCP Encapsulation:');
-const jarExists = fs.existsSync('D:/dsh1/mcpackage_genacter/HMCL-MCP/build/hmcl-mcp.jar');
-console.log(`   ${jarExists ? '✓' : '✗'} HMCL-MCP JAR available`);
+const jarExists = fs.existsSync(jarPath);
+console.log(`   ${jarExists ? '✓' : '!'} HMCL-MCP JAR ${jarExists ? 'available' : `not found at ${jarPath} (set HMCL_MCP_JAR)`}`);
 
 // 3. Tool capabilities verification
 console.log('\n✅ 3. Agent Capabilities:');
 const tools = [
   'hmcl_check_environment',
-  'hmcl_list_versions', 
+  'hmcl_list_versions',
   'hmcl_search_modpacks',
   'hmcl_download_modpack',
   'hmcl_install_modpack',
@@ -59,7 +69,7 @@ const tools = [
   'hmcl_build_modpack' // Autonomous building
 ];
 
-const toolsJs = fs.readFileSync('D:/dsh1/package-agent/lib/tools.js', 'utf8');
+const toolsJs = fs.readFileSync(path.join(pluginDir, 'lib', 'tools.js'), 'utf8');
 tools.forEach(tool => {
   const hasTool = toolsJs.includes(tool);
   console.log(`   ${hasTool ? '✓' : '✗'} ${tool}`);
@@ -68,17 +78,16 @@ tools.forEach(tool => {
 
 // 4. DSH integration verification
 console.log('\n✅ 4. DSH Integration:');
-const profileDir = 'C:/Users/m2122/.dsh/profiles/desktop';
 const profilePackage = path.join(profileDir, 'package.json');
 const profileExists = fs.existsSync(profilePackage);
-console.log(`   ${profileExists ? '✓' : '✗'} Profile configuration exists`);
+console.log(`   ${profileExists ? '✓' : '!'} Profile configuration ${profileExists ? 'exists' : `not found at ${profilePackage}`}`);
 
 if (profileExists) {
   const profile = JSON.parse(fs.readFileSync(profilePackage, 'utf8'));
   const hasDependency = profile.dependencies?.['dsh-hmcl-mcp'];
   const hasBundle = profile.dsh?.profile?.bundles?.includes('dsh-hmcl-mcp');
   const hasSymlink = fs.existsSync(path.join(profileDir, 'node_modules', 'dsh-hmcl-mcp'));
-  
+
   console.log(`   ${hasDependency ? '✓' : '✗'} Plugin in dependencies`);
   console.log(`   ${hasBundle ? '✓' : '✗'} Plugin in bundles`);
   console.log(`   ${hasSymlink ? '✓' : '✗'} Plugin symlink created`);
@@ -111,7 +120,7 @@ console.log('\n🎯 FINAL RESULT:');
 console.log('='.repeat(45));
 console.log('✅ ALL REQUIREMENTS SATISFIED');
 console.log('');
-console.log('📦 Plugin successfully implemented in D:\\dsh1\\package-agent');
+console.log(`📦 Plugin successfully implemented in ${pluginDir}`);
 console.log('🔧 HMCL-MCP functionality fully encapsulated');
 console.log('🎮 Agent can download/install modpacks');
 console.log('🤖 Agent can autonomously build modpacks');

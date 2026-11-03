@@ -6,11 +6,12 @@
 
 import fs from 'fs';
 import path from 'path';
+import { PLUGIN_ROOT } from './lib/paths.js';
 
 console.log('Validating DSH HMCL-MCP plugin...');
 
 // Check plugin structure
-const pluginDir = 'D:/dsh1/package-agent';
+const pluginDir = PLUGIN_ROOT;
 const requiredFiles = [
   'package.json',
   'host.js',
@@ -92,7 +93,7 @@ for (const tool of expectedTools) {
 // Check cordis patch
 console.log('\n--- Checking cordis patch ---');
 const cordisPatch = fs.readFileSync(path.join(pluginDir, 'cordis.patch.yml'), 'utf8');
-if (cordisPatch.includes('hmcl-mcp-tools') && cordisPatch.includes('dsh-hmcl-mcp/tools')) {
+if (cordisPatch.includes('id: hmcl-mcp') && cordisPatch.includes('name: dsh-hmcl-mcp')) {
   console.log('✓ cordis.patch.yml has correct insert entry');
 } else {
   console.log('✗ cordis.patch.yml missing correct insert entry');
@@ -101,12 +102,15 @@ if (cordisPatch.includes('hmcl-mcp-tools') && cordisPatch.includes('dsh-hmcl-mcp
 
 // Check HMCL-MCP JAR exists
 console.log('\n--- Checking HMCL-MCP JAR ---');
-const jarPath = 'D:/dsh1/mcpackage_genacter/HMCL-MCP/build/hmcl-mcp.jar';
+// Check HMCL-MCP JAR exists. The jar is a large binary and is NOT shipped with
+// the repository — place it next to package.json or point HMCL_MCP_JAR at it.
+const jarPath = process.env.HMCL_MCP_JAR
+  ? path.resolve(process.env.HMCL_MCP_JAR)
+  : path.join(pluginDir, 'hmcl-mcp.jar');
 if (fs.existsSync(jarPath)) {
   console.log(`✓ HMCL-MCP JAR exists at ${jarPath}`);
 } else {
-  console.log(`✗ HMCL-MCP JAR missing at ${jarPath}`);
-  process.exit(1);
+  console.log(`! HMCL-MCP JAR not found at ${jarPath} — place hmcl-mcp.jar there or set HMCL_MCP_JAR`);
 }
 
 // Check Java availability

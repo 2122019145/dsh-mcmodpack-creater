@@ -20,6 +20,11 @@ if sys.platform == "win32":
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
     sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8")
 
+def _expand(p: str) -> str:
+    """展开 `~` 与环境变量，接受用户提供的相对/绝对路径。"""
+    return os.path.expanduser(os.path.expandvars(p))
+
+
 CHAPTER_ID = "1000000000000002"
 GROUP_ID = "1000000000000001"
 ID_RE = re.compile(r"^[0-7][0-9A-F]{15}$")
@@ -311,7 +316,8 @@ def generate_quests(spec_path: str, workdir: str = None, instance: str = None,
         return result
 
     if workdir is None:
-        workdir = "D:/mc-work"
+        workdir = os.path.expanduser("~/.hmcl-mcp")
+    workdir = _expand(workdir)
 
     try:
         root = resolve_root(workdir, instance)
@@ -420,7 +426,7 @@ def verify_item_ids(spec_path: str, mods_dir: str) -> dict:
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(description="FTB Quests 构建工具")
     ap.add_argument("--spec", required=True)
-    ap.add_argument("--workdir", default="D:/mc-work")
+    ap.add_argument("--workdir", default=os.path.expanduser("~/.hmcl-mcp"))
     ap.add_argument("--instance", default=None)
     ap.add_argument("--mods-dir", default=None)
     ap.add_argument("--mode", default="auto", choices=["auto", "flat", "json5"])
@@ -430,6 +436,9 @@ if __name__ == "__main__":
     ap.add_argument("--detect-only", action="store_true",
                     help="只探测格式代际（flat / json5），不读 spec、不写文件")
     args = ap.parse_args()
+    args.workdir = _expand(args.workdir)
+    if args.mods_dir:
+        args.mods_dir = _expand(args.mods_dir)
 
     if args.detect_only:
         mods_dir = args.mods_dir or os.path.join(args.workdir, "versions", "mods")
